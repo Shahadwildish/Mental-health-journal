@@ -1,8 +1,13 @@
-// server/index.js
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+
+const authRoute = require('./routes/auth');
+
+
+
 
 dotenv.config();
 const app = express();
@@ -19,6 +24,8 @@ const reflectionsRoute = require('./routes/reflections'); // Assuming reflection
 // Use routes
 app.use('/api/mood_entries', moodEntriesRoute);
 app.use('/api/reflections', reflectionsRoute); // Assuming reflectionsRoute exists
+app.use('/api/auth', authRoute);
+app.use('/api/userinfo', userInfoRoute);
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://shayalobeidi:UqAVNLsxhoGISPFh@cluster0.rvlok4o.mongodb.net/MHJDB', { useNewUrlParser: true, useUnifiedTopology: true })

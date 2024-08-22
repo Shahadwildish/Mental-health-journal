@@ -18,6 +18,20 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/userinfo', async (req, res) => {
+    try {
+      const user = await User.findOne({ userId: req.user.userId });
+      if (!user) return res.status(404).json({ error: 'User not found' });
+  
+      res.json({
+        userId: user.userId,
+        username: user.username,
+        email: user.email
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 // Additional routes for Read, Update, Delete...
 
 module.exports = router;

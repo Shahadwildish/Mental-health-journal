@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button, Typography, Card, CardContent } from '@mui/material';
+import { createMoodEntry } from '../api';
 
 const Homepage = () => {
   return (
@@ -26,5 +27,6 @@ const Homepage = () => {
     </div>
   );
 };
+
 
 export default Homepage;

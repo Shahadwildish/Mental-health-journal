@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import MoodEntryForm from './components/MoodEntryForm';
 import MoodEntryList from './components/MoodEntryList';
 import Homepage from './components/Homepage'; // Create this component for the homepage
+import Login from './pages/Login';
+import Register from './pages/Register';
 import './App.css'
 const App = () => {
   return (
@@ -19,6 +21,8 @@ const App = () => {
 
         <main>
           <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/mood-entries" element={<MoodEntryList />} />
             <Route path="/create-mood-entry" element={<MoodEntryForm />} />

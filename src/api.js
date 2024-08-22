@@ -10,6 +10,11 @@ export const createMoodEntry = async (entry) => {
     },
     body: JSON.stringify(entry),
   });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Error: ${error.error || 'Unknown error'}`);
+  }
+
   return response.json();
 };
 
@@ -70,3 +75,25 @@ export const deleteReflection = async (id) => {
   });
   return response.json();
 };
+
+export const getAuthToken = () => {
+    return localStorage.getItem('authToken');
+  };
+
+export const loginUser = async (credentials) => {
+    const response = await fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem('authToken', data.token); 
+    }
+    return data;
+  };
+  
+
+  
