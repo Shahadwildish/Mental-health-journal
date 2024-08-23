@@ -1,39 +1,64 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { getAuthToken } from '../api'; 
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
+// Context creation
 const AuthContext = createContext();
 
+// AuthProvider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Fetch user data and check authentication status
   useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      
-      fetchUserInfo(token);
-    }
+    const fetchUser = async () => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        try {
+          const response = await fetch('http://localhost:5000/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setUser(data.user); // Adjust based on your response structure
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.error('Failed to fetch user', error);
+          setIsAuthenticated(false);
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
-  const fetchUserInfo = async (token) => {
-    
-    try {
-      const response = await fetch('http://localhost:5000/api/users', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const data = await response.json();
-      setUser(data);
-    } catch (error) {
-      console.error('Failed to fetch user info:', error);
-    }
+  // Login function
+  const login = (user) => {
+    localStorage.setItem('authToken', user.token); // Store token in localStorage
+    setUser(user);
+    setIsAuthenticated(true);
+  };
+
+  // Logout function
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    setUser(null);
+    setIsAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => React.useContext(AuthContext);
+// Custom hook to use the AuthContext
+export const useAuth = () => useContext(AuthContext);

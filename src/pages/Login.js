@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Container } from '@mui/material';
+import { TextField, Button, Typography, Container, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext'; // Ensure path is correct
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth(); // Destructure login function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,16 +20,19 @@ const Login = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-      
+
       if (response.ok) {
-        const { token } = await response.json();
-        localStorage.setItem('token', token);
+        const data = await response.json();
+        const { token } = data; // Ensure token is in response
+        localStorage.setItem('authToken', token);
+        login(data); // Pass the full data object if necessary
         navigate('/homepage'); // Redirect to dashboard or another page
       } else {
-        console.error('Login failed');
+        setError('Login failed');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error logging in:', error);
+      setError('Error logging in');
     }
   };
 
@@ -35,6 +41,7 @@ const Login = () => {
       <Typography variant="h5" gutterBottom>
         Login
       </Typography>
+      {error && <Alert severity="error">{error}</Alert>}
       <form onSubmit={handleSubmit}>
         <TextField
           label="Email"
