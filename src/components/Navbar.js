@@ -7,10 +7,10 @@ const Navbar = () => {
 
     return (
         <nav>
-            <Link to="/">Home</Link>
             {isAuthenticated && (
                 <>
-                    <Link to="/mood-entries">My Mood Entries</Link>
+                    <Link to="/home">Home</Link>
+                    <Link to="/MoodEntryList">My Mood Entries</Link>
                     <Link to="/reflections">My Reflections</Link>
                     <Link to="/profile">My Profile</Link>
                     <Link to="/create-mood-entry">Create Mood Entry</Link>
@@ -18,7 +18,12 @@ const Navbar = () => {
                     <button onClick={logout}>Logout</button>
                 </>
             )}
-            {!isAuthenticated && <Link to="/login">Login</Link>}
+            {!isAuthenticated && (
+                <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/Register">Register</Link>
+                </>)
+            }
         </nav>
     );
 };

@@ -72,23 +72,12 @@ const Reflections = () => {
       <Typography variant="h4" gutterBottom>
         My Reflections
       </Typography>
-      <TextField
-        label="New Reflection"
-        multiline
-        rows={4}
-        value={newReflection}
-        onChange={(e) => setNewReflection(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <Button variant="contained" color="primary" onClick={handleCreateReflection}>
-        Add Reflection
-      </Button>
+      
 
       <List>
         {reflections.map((reflection) => (
           <ListItem key={reflection._id}>
-            <ListItemText primary={reflection.text} />
+            <ListItemText primary={reflection.reflectionText} />
             <IconButton onClick={() => openEditModal(reflection)}>
               <Edit />
             </IconButton>
@@ -113,7 +102,7 @@ const Reflections = () => {
             label="Reflection Text"
             multiline
             rows={4}
-            value={editMode ? currentReflection?.text : ''}
+            value={editMode ? currentReflection?.reflectionText : ''}
             onChange={(e) => setCurrentReflection({ ...currentReflection, text: e.target.value })}
             fullWidth
             margin="normal"

@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/userinfo', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
       const user = await User.findOne({ userId: req.user.userId });
       if (!user) return res.status(404).json({ error: 'User not found' });

@@ -3,17 +3,24 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Alert } from '@mui/material';
 import { createReflection } from '../api';
+import { useAuth } from '../contexts/AuthContext';
 
 const CreateReflection = () => {
   const [reflectionText, setReflectionText] = useState('');
   const [date, setDate] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const { user, isAuthenticated, login, logout } = useAuth(); // Access the authenticated user from context
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!user) {
+      setError('User not authenticated');
+      return;
+    }
     try {
-      const reflection = { reflectionText, date };
+      const reflection = { reflectionText, date, userId: user.userId  };
       await createReflection(reflection);
       setSuccess('Reflection created successfully!');
       setReflectionText('');

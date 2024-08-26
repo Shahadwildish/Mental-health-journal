@@ -90,8 +90,8 @@ export const registerUser = async ({ email, password }) => {
 
 
 // Fetch user profile
-export const getUserProfile = async () => {
-    const response = await fetch(`${API_URL}/users/me`, {
+export const getUserProfile = async (userId) => {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -149,11 +149,11 @@ export const createMoodEntry = async (entry) => {
 export const createReflection = async (reflection) => {
     const response = await fetch(`${API_URL}/reflections`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Add authorization header
-        },
-        body: JSON.stringify(reflection),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Include the token
+      },
+      body: JSON.stringify(reflection),
     });
 
     if (!response.ok) {

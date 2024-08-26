@@ -18,11 +18,11 @@ app.use(cors());
 app.use(express.json());
 
 // Import routes
-const moodEntriesRoute = require('./routes/moodEntries');
+const MoodEntriesList = require('./routes/MoodEntryList');
 const reflectionsRoute = require('./routes/reflections'); // Assuming reflectionsRoute exists
 
 // Use routes
-app.use('/api/mood_entries', moodEntriesRoute);
+app.use('/api/mood_entries', MoodEntriesList);
 app.use('/api/reflections', reflectionsRoute); // Assuming reflectionsRoute exists
 app.use('/api/auth', authRoute);
 app.use('/api/userinfo', userInfoRoute);

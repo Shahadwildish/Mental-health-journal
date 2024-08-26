@@ -3,17 +3,24 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Container, Box, Alert } from '@mui/material';
 import { getUserProfile, updateUserProfile } from '../api';
+import { useAuth } from '../contexts/AuthContext';
 
 const Profile = () => {
   const [profile, setProfile] = useState({ username: '', email: '' });
   const [editMode, setEditMode] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
+  const user = useAuth(); // Assuming user is an object with userId property
+console.log(user)
   useEffect(() => {
     const fetchProfile = async () => {
+    //   if (!user || !user.userId) {
+    //     setError('User not authenticated.');
+    //     return;
+    //   }
+
       try {
-        const data = await getUserProfile();
+        const data = await getUserProfile(user.user.userId); // Pass the user ID
         setProfile(data);
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -22,7 +29,7 @@ const Profile = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [user]);
 
   const handleChange = (e) => {
     setProfile({
