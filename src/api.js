@@ -1,6 +1,5 @@
 // src/api.js
 const API_URL = 'http://localhost:5000/api';
-
 // Mood Entries
 
 export const getMoodEntries = async () => {
@@ -28,8 +27,8 @@ export const deleteMoodEntry = async (id) => {
 
 
 
-export const getReflections = async () => {
-    const response = await fetch(`${API_URL}/reflections`);
+export const getReflections = async (id) => {
+    const response = await fetch(`${API_URL}/reflections/${id}`);
     return response.json();
 };
 
@@ -107,7 +106,7 @@ export const getUserProfile = async (userId) => {
 
 // Update user profile
 export const updateUserProfile = async (userData) => {
-    const response = await fetch(`${API_URL}/users/me`, {
+    const response = await fetch(`${API_URL}/users/${userData.userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

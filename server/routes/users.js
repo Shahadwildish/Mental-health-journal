@@ -18,9 +18,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/:userId', async (req, res) => {
     try {
-      const user = await User.findOne({ userId: req.user.userId });
+      const user = await User.findOne({ userId: req.params.userId });
+      console.log(req.userId);
       if (!user) return res.status(404).json({ error: 'User not found' });
   
       res.json({
@@ -32,6 +33,35 @@ router.get('/', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-// Additional routes for Read, Update, Delete...
+
+  
+  router.put('/:userId', async (req, res) => {
+    try {
+      const { username, email, password } = req.body;
+      const updates = { username, email };
+  
+      // Update password if provided
+      if (password) {
+        const passwordHash = await bcrypt.hash(password, 10);
+        updates.passwordHash = passwordHash;
+      }
+  
+      const user = await User.findOneAndUpdate(
+        { userId: req.params.userId }, // Find user by ID
+        { $set: updates },             // Update fields
+        { new: true }                  // Return the updated user
+      );
+  
+      if (!user) return res.status(404).json({ error: 'User not found' });
+  
+      res.json({
+        userId: user.userId,
+        username: user.username,
+        email: user.email
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 
 module.exports = router;

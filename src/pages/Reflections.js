@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Container, List, ListItem, ListItemText, IconButton, Modal, Box } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { getReflections, createReflection, updateReflection, deleteReflection } from '../api';
+import { useAuth } from '../contexts/AuthContext';
 
 const Reflections = () => {
   const [reflections, setReflections] = useState([]);
@@ -11,11 +12,12 @@ const Reflections = () => {
   const [editMode, setEditMode] = useState(false);
   const [currentReflection, setCurrentReflection] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const user = useAuth();
 
   useEffect(() => {
     const fetchReflections = async () => {
       try {
-        const data = await getReflections();
+        const data = await getReflections(user.user.userId);
         setReflections(data);
       } catch (error) {
         console.error('Error fetching reflections:', error);
@@ -23,7 +25,7 @@ const Reflections = () => {
     };
 
     fetchReflections();
-  }, []);
+  }, [user.user.userId]);
 
   const handleCreateReflection = async () => {
     try {

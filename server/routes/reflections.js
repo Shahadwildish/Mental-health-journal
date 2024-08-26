@@ -14,9 +14,11 @@ router.post('/', async (req, res) => {
 });
 
 // Read all reflections
-router.get('/', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   try {
-    const reflections = await Reflection.find();
+    const {userId} = req.params.userId
+    const reflections = await Reflection.find({ UserId: userId });
+    console.log(reflections);
     res.status(200).json(reflections);
   } catch (error) {
     res.status(500).json({ error: error.message });
