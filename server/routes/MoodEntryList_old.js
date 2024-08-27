@@ -14,15 +14,18 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Read All Mood Entries
-router.get('/', async (req, res) => {
+
+
+// GET mood entries for a specific user
+router.get('/moodEntries/:userId', async (req, res) => {
   try {
-    const moodEntries = await MoodEntry.find();
-    res.status(200).json(moodEntries);
+    const moodEntries = await MoodEntry.find({ userId: req.params.userId });
+    res.json(moodEntries);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Read Single Mood Entry by ID
 router.get('/:id', async (req, res) => {

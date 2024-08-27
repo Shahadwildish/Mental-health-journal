@@ -1,32 +1,5 @@
-// src/api.js
+
 const API_URL = 'http://localhost:5000/api';
-// Mood Entries
-
-export const getMoodEntries = async () => {
-    const response = await fetch(`${API_URL}/mood_entries`);
-    return response.json();
-};
-
-export const updateMoodEntry = async (id, entry) => {
-    const response = await fetch(`${API_URL}/mood_entries/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(entry),
-    });
-    return response.json();
-};
-
-export const deleteMoodEntry = async (id) => {
-    const response = await fetch(`${API_URL}/mood_entries/${id}`, {
-        method: 'DELETE',
-    });
-    return response.json();
-};
-
-
-
 export const getReflections = async (id) => {
     const response = await fetch(`${API_URL}/reflections/${id}`);
     return response.json();
@@ -122,37 +95,17 @@ export const updateUserProfile = async (userData) => {
     return response.json();
 };
 
-
-
-
-export const createMoodEntry = async (entry) => {
-    const response = await fetch(`${API_URL}/mood_entries`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Include the token
-      },
-      body: JSON.stringify(entry),
-    });
   
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-  
-    return response.json();
-  };
-  
-
 
 
 export const createReflection = async (reflection) => {
     const response = await fetch(`${API_URL}/reflections`, {
         method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Include the token
-      },
-      body: JSON.stringify(reflection),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Include the token
+        },
+        body: JSON.stringify(reflection),
     });
 
     if (!response.ok) {
@@ -161,3 +114,53 @@ export const createReflection = async (reflection) => {
 
     return response.json();
 };
+
+
+
+
+
+
+export const getMoodEntries = async (userId) => {
+    const response = await fetch(`http://localhost:5000/api/mood-entries/${userId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch mood entries');
+    }
+    return response.json();
+  };
+  
+  export const createMoodEntry = async (entry) => {
+    const response = await fetch('http://localhost:5000/api/mood-entries', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(entry),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to create mood entry');
+    }
+    return response.json();
+  };
+  
+  export const updateMoodEntry = async (id, entry) => {
+    const response = await fetch(`http://localhost:5000/api/mood-entries/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(entry),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update mood entry');
+    }
+    return response.json();
+  };
+  
+  export const deleteMoodEntry = async (id) => {
+    const response = await fetch(`http://localhost:5000/api/mood-entries/${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error('Failed to delete mood entry');
+    }
+  };

@@ -13,11 +13,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Read all reflections
+// Read all reflections for a single user 
 router.get('/:userId', async (req, res) => {
   try {
-    const {userId} = req.params.userId
-    const reflections = await Reflection.find({ UserId: userId });
+    const userId = req.params.userId
+    console.log(userId)
+    const reflections = await Reflection.find({ userId: parseInt(userId, 10) });
     console.log(reflections);
     res.status(200).json(reflections);
   } catch (error) {

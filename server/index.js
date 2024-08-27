@@ -17,11 +17,13 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('combined'));
 // Import routes
-const MoodEntriesList = require('./routes/MoodEntryList');
+// const MoodEntryList  = require('./routes/MoodEntryList_old');
 const reflectionsRoute = require('./routes/reflections'); 
+const moodEntriesRouter = require('./routes/moodEntries');
+app.use('/api/mood-entries', moodEntriesRouter);
 
 // Use routes
-app.use('/api/mood_entries', MoodEntriesList);
+// app.use('/api/mood_entries', MoodEntryList);
 app.use('/api/reflections', reflectionsRoute); 
 app.use('/api/auth', authRoute);
 const userRoutes  = require('./routes/users');

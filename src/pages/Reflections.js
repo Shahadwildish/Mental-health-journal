@@ -1,7 +1,5 @@
-// src/pages/Reflections.js
-
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Container, List, ListItem, ListItemText, IconButton, Modal, Box } from '@mui/material';
+import { TextField, Button, Typography, Container, List, ListItem, ListItemText, IconButton, Modal, Box, Alert } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { getReflections, createReflection, updateReflection, deleteReflection } from '../api';
 import { useAuth } from '../contexts/AuthContext';
@@ -12,15 +10,21 @@ const Reflections = () => {
   const [editMode, setEditMode] = useState(false);
   const [currentReflection, setCurrentReflection] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [error, setError] = useState(null);
   const user = useAuth();
 
   useEffect(() => {
     const fetchReflections = async () => {
       try {
         const data = await getReflections(user.user.userId);
-        setReflections(data);
+        if (data.length === 0) {
+          setError('No reflections found.');
+        } else {
+          setReflections(data);
+        }
       } catch (error) {
         console.error('Error fetching reflections:', error);
+        setError('Failed to fetch reflections.');
       }
     };
 
@@ -29,7 +33,7 @@ const Reflections = () => {
 
   const handleCreateReflection = async () => {
     try {
-      const newRef = await createReflection({ text: newReflection });
+      const newRef = await createReflection({ text: newReflection, userId: user.user.userId });
       setReflections([...reflections, newRef]);
       setNewReflection('');
     } catch (error) {
@@ -74,20 +78,31 @@ const Reflections = () => {
       <Typography variant="h4" gutterBottom>
         My Reflections
       </Typography>
-      
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       <List>
-        {reflections.map((reflection) => (
-          <ListItem key={reflection._id}>
-            <ListItemText primary={reflection.reflectionText} />
-            <IconButton onClick={() => openEditModal(reflection)}>
-              <Edit />
-            </IconButton>
-            <IconButton onClick={() => handleDeleteReflection(reflection._id)}>
-              <Delete />
-            </IconButton>
+        {reflections.length > 0 ? (
+          reflections.map((reflection) => (
+            <ListItem key={reflection._id}>
+              <ListItemText primary={reflection.reflectionText} />
+              <IconButton onClick={() => openEditModal(reflection)}>
+                <Edit />
+              </IconButton>
+              <IconButton onClick={() => handleDeleteReflection(reflection._id)}>
+                <Delete />
+              </IconButton>
+            </ListItem>
+          ))
+        ) : (
+          <ListItem>
+            <ListItemText primary="No reflections available" />
           </ListItem>
-        ))}
+        )}
       </List>
 
       <Modal
