@@ -164,3 +164,11 @@ export const getMoodEntries = async (userId) => {
       throw new Error('Failed to delete mood entry');
     }
   };
+
+  export const getRecentMoodEntry = async (userId) => {
+  const response = await fetch(`http://localhost:5000/api/mood-entries/${userId}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch recent mood entry');
+  }
+  return response.json();
+};

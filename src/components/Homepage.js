@@ -1,11 +1,34 @@
-import React from 'react';
-import { Button, Typography, Card, CardContent, Container, Grid, Paper, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, Typography, Card, CardContent, Container, Grid, Paper, Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { getRecentMoodEntry } from '../api';
 
 const Homepage = () => {
   const navigate = useNavigate(); // Move useNavigate inside the component
   const  user  = useAuth(); //grab the authentication context
+  const [recentEntry, setRecentEntry] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecentMoodEntry = async () => {
+      try {
+        setLoading(true);
+        const data = await getRecentMoodEntry(user.user.userId); // Fetch the recent mood entry
+        setRecentEntry(data);
+      } catch (error) {
+        console.error('Error fetching recent mood entry:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchRecentMoodEntry();
+    }
+  }, [user]);
+
+
   console.log(user);
   const handleLogMood = () => {
     navigate('/create-mood-entry'); // Use navigate inside the function
@@ -28,11 +51,19 @@ const Homepage = () => {
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
-          <Card elevation={3}>
-            <CardContent>
-              <Typography variant="h6">Recent Mood Entry</Typography>
-              <Typography>Mood: Happy</Typography>
-              <Typography>Notes: Had a great day!</Typography>
+          <Card elevation={10} sx={{ p: 4, textAlign: 'center' }}>
+          <Typography variant="h6">Recent Mood Entry</Typography>
+          <CardContent>
+              {loading ? (
+                <CircularProgress />
+              ) : recentEntry ? (
+                <>
+                  <Typography>Mood: {recentEntry.moodRating}</Typography>
+                  <Typography>Notes: {recentEntry.notes}</Typography>
+                </>
+              ) : (
+                <Typography>No recent mood entries found.</Typography>
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -40,7 +71,7 @@ const Homepage = () => {
         <Grid item xs={12} md={8}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
-              <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+              <Paper elevation={10} sx={{ p: 4, textAlign: 'center' }}>
                 <Typography variant="h6">Log Mood</Typography>
                 <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={handleLogMood}>
                   Log Mood
@@ -48,7 +79,7 @@ const Homepage = () => {
               </Paper>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+              <Paper elevation={10} sx={{ p: 4, textAlign: 'center' }}>
                 <Typography variant="h6">View Analytics</Typography>
                 <Button variant="contained" color="primary" sx={{ mt: 2 }}onClick={handleViewAnalytics} >
                   View Analytics
@@ -56,7 +87,7 @@ const Homepage = () => {
               </Paper>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+              <Paper elevation={10} sx={{ p: 4, textAlign: 'center' }}>
                 <Typography variant="h6">Explore Resources</Typography>
                 <Button variant="contained" color="primary" sx={{ mt: 2 }}>
                   Explore Resources

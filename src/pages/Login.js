@@ -31,8 +31,8 @@ const Login = () => {
                 localStorage.setItem('authToken', token);
                 login(data);
 
-                const userdata = await getUserProfile(user.userId); // Pass the user ID
-                setUsername(userdata.username);
+                // const userdata = await getUserProfile(user.userId); // Pass the user ID
+                // setUsername(userdata.username);
                 navigate('/home'); // Redirect to home
 
             } else {

@@ -42,7 +42,7 @@ router.get('/:userId', async (req, res) => {
   
       // Update password if provided
       if (password) {
-        const passwordHash = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hash(password, 10); //HASH THE PASSWORD
         updates.passwordHash = passwordHash;
       }
   
