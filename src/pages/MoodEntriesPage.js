@@ -13,6 +13,14 @@ const MoodEntryList = () => {
   const [error, setError] = useState(null);
   const { user } = useAuth();
 
+  function formatDate(date) {
+    const options = {
+        weekday: 'short', //short looks better than long
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    };
+  }
   useEffect(() => {
     const fetchMoodEntries = async () => {
       try {
@@ -93,7 +101,8 @@ const MoodEntryList = () => {
         {moodEntries.length > 0 ? (
           moodEntries.map((entry) => (
             <ListItem key={entry._id}>
-              <ListItemText primary={`Mood Rating: ${entry.moodRating}`} secondary={entry.notes} />
+              <ListItemText primary={`Mood: ${entry.category}`} secondary={`Mood Rating: ${entry.moodRating}`} />
+              <ListItemText primary={`Notes: ${entry.notes}`} secondary={`Created At: ${entry.createdAt}`} />
               <IconButton onClick={() => openEditModal(entry)}>
                 <Edit />
               </IconButton>

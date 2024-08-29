@@ -6,7 +6,7 @@ import { getRecentMoodEntry } from '../api';
 
 
 const Homepage = () => {
-  const navigate = useNavigate(); // Move useNavigate inside the component
+  const navigate = useNavigate();  // needed this for the buttons on the homepage
   const  user  = useAuth(); //grab the authentication context
   const [recentEntry, setRecentEntry] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,9 +14,9 @@ const Homepage = () => {
   // date was in an unfriendly format, need a function to format it
   function formatDate(date) {
     const options = {
-        weekday: 'long',
+        weekday: 'short', //short looks better than long
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric'
     };
     return new Intl.DateTimeFormat('en-US', options).format(new Date(date));

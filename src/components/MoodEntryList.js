@@ -13,7 +13,8 @@ const MoodEntryList = () => {
         const fetchEntries = async () => {
             try {
                 setLoading(true);
-                const data = await getMoodEntries(user.user.userId);  // Fetch using userId
+                const data = await getMoodEntries(user.user.userId);
+                console.log(data); 
                 setEntries(data);
             } catch (error) {
                 console.error('Error fetching mood entries:', error);
@@ -42,6 +43,7 @@ const MoodEntryList = () => {
                         <Grid item xs={12} md={6} key={entry._id}>
                             <Card elevation={3}>
                                 <CardContent>
+                                    <Typography variant="h4">Mood: {entry.category}</Typography>
                                     <Typography variant="h6">Mood Rating: {entry.moodRating}</Typography>
                                     <Typography>Notes: {entry.notes}</Typography>
                                 </CardContent>
