@@ -4,18 +4,33 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getRecentMoodEntry } from '../api';
 
+
 const Homepage = () => {
   const navigate = useNavigate(); // Move useNavigate inside the component
   const  user  = useAuth(); //grab the authentication context
-  const [recentEntry, setRecentEntry] = useState(null);
+  const [recentEntry, setRecentEntry] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // date was in an unfriendly format, need a function to format it
+  function formatDate(date) {
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
+}
   useEffect(() => {
     const fetchRecentMoodEntry = async () => {
       try {
         setLoading(true);
         const data = await getRecentMoodEntry(user.user.userId); // Fetch the recent mood entry
-        setRecentEntry(data);
+        console.log(data);
+        const mostRecentEntry = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+setRecentEntry(mostRecentEntry);
+
+
       } catch (error) {
         console.error('Error fetching recent mood entry:', error);
       } finally {
@@ -58,8 +73,10 @@ const Homepage = () => {
                 <CircularProgress />
               ) : recentEntry ? (
                 <>
-                  <Typography>Mood: {recentEntry.moodRating}</Typography>
+                  <Typography>Rating: {recentEntry.moodRating}/10</Typography>
+                  <Typography>Mood: {recentEntry.category}</Typography>
                   <Typography>Notes: {recentEntry.notes}</Typography>
+                  <Typography>Date Mood Created: {formatDate(recentEntry.createdAt)}</Typography>
                 </>
               ) : (
                 <Typography>No recent mood entries found.</Typography>

@@ -21,9 +21,8 @@ app.use(morgan('combined'));
 const reflectionsRoute = require('./routes/reflections'); 
 const moodEntriesRouter = require('./routes/moodEntries');
 app.use('/api/mood-entries', moodEntriesRouter);
+app.use('/api/mood-entries/recent', moodEntriesRouter);
 
-// Use routes
-// app.use('/api/mood_entries', MoodEntryList);
 app.use('/api/reflections', reflectionsRoute); 
 app.use('/api/auth', authRoute);
 const userRoutes  = require('./routes/users');

@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import Navbar from './components/Navbar';
+//import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import MoodEntriesPage from './pages/MoodEntriesPage';
 import Reflections from './pages/Reflections';
 import Profile from './pages/Profile';
@@ -16,7 +17,7 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
+        <Sidebar />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/mood-entries" element={<MoodEntriesPage />} />

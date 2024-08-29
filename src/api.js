@@ -166,7 +166,7 @@ export const getMoodEntries = async (userId) => {
   };
 
   export const getRecentMoodEntry = async (userId) => {
-  const response = await fetch(`http://localhost:5000/api/mood-entries/${userId}`);
+  const response = await fetch(`http://localhost:5000/api/mood-entries/recent/${userId}`);
   if (!response.ok) {
     throw new Error('Failed to fetch recent mood entry');
   }

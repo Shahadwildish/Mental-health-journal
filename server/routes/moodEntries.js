@@ -57,14 +57,13 @@ router.put('/mood-entries/:id', async (req, res) => {
 });
 
 
-router.get('/mood-entries/:userId', async (req, res) => {
+router.get('/mood-entries/recent/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
 
         // Fetch the most recent mood entry for the user
-        const recentMoodEntry = await MoodEntry.findOne({ userId })
-            .sort({ createdAt: -1 }) // Sort by creation date in descending order
-            .exec();
+        const recentMoodEntry = await MoodEntry.findOne({ userId }).sort({ [createdAt]: -1 }); // Sort by creation date in descending order
+            //.exec();
 
         if (!recentMoodEntry) {
             return res.status(404).json({ message: 'No mood entries found' });
