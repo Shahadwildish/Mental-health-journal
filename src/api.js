@@ -121,7 +121,7 @@ export const createReflection = async (reflection) => {
 
 
 export const getMoodEntries = async (userId) => {
-    const response = await fetch(`http://localhost:5000/api/mood-entries/${userId}`);
+    const response = await fetch(`http://localhost:5000/api/${userId}`);
     if (!response.ok) {
       throw new Error('Failed to fetch mood entries');
     }

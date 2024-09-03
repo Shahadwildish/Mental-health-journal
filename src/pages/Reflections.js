@@ -90,6 +90,7 @@ const Reflections = () => {
           reflections.map((reflection) => (
             <ListItem key={reflection._id}>
               <ListItemText primary={reflection.reflectionText} />
+              <ListItemText primary={reflection.date} />
               <IconButton onClick={() => openEditModal(reflection)}>
                 <Edit />
               </IconButton>
