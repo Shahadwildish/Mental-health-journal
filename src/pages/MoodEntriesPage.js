@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Container, List, ListItem, ListItemText, IconButton, Modal, Box, Alert } from '@mui/material';
+import {  TextField,  Button,  Typography,  Container,  List,  ListItem,  ListItemText,  IconButton,  Modal,  Box,  Alert,  FormControl,  InputLabel,  Select,  MenuItem} from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
-import { getMoodEntries, createMoodEntry, updateMoodEntry, deleteMoodEntry } from '../api'; // Ensure correct API functions
+import {  getMoodEntries,  createMoodEntry,  updateMoodEntry,  deleteMoodEntry} from '../api'; 
 import { useAuth } from '../contexts/AuthContext';
 
 const MoodEntryList = () => {
@@ -13,22 +13,25 @@ const MoodEntryList = () => {
   const [error, setError] = useState(null);
   const { user } = useAuth();
 
+  // Format date utility
   function formatDate(date) {
-    const options = {
-        weekday: 'short', //short looks better than long
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    };
+    return new Date(date).toLocaleDateString('en-US', {
+      weekday: 'short', // Displays abbreviated day of the week
+      year: 'numeric',
+      month: 'short',   // Displays abbreviated month
+      day: 'numeric'
+    });
   }
+
   useEffect(() => {
     const fetchMoodEntries = async () => {
       try {
-        const data = await getMoodEntries(user.userId); // Ensure the user ID is used
+        const data = await getMoodEntries(user.userId);
         if (data.length === 0) {
           setError('No mood entries found.');
         } else {
           setMoodEntries(data);
+          setError(null);
         }
       } catch (error) {
         console.error('Error fetching mood entries:', error);
@@ -44,23 +47,33 @@ const MoodEntryList = () => {
       const newEntry = await createMoodEntry({ moodRating: newMood, userId: user.userId });
       setMoodEntries([...moodEntries, newEntry]);
       setNewMood('');
+      setError(null);
     } catch (error) {
       console.error('Error creating mood entry:', error);
+      setError('Failed to create mood entry.');
     }
   };
 
   const handleUpdateMoodEntry = async () => {
+    if (!currentEntry) return;
+
     try {
+      console.log('Current entry before update:', currentEntry);
       const updatedEntry = await updateMoodEntry(currentEntry._id, {
         moodRating: currentEntry.moodRating,
-        notes: currentEntry.notes, 
+        notes: currentEntry.notes,
+        category: currentEntry.category
       });
-      setMoodEntries(moodEntries.map(entry => entry._id === updatedEntry._id ? updatedEntry : entry));
+
+      setMoodEntries(
+        moodEntries.map(entry => entry._id === updatedEntry._id ? updatedEntry : entry)
+      );
       setEditMode(false);
       setModalOpen(false);
+      setError(null);
     } catch (error) {
       console.error('Error updating mood entry:', error);
-      setError('Failed to update mood entry.'); // Set error state for user feedback
+      // setError('Failed to update mood entry.');
     }
   };
 
@@ -68,8 +81,10 @@ const MoodEntryList = () => {
     try {
       await deleteMoodEntry(id);
       setMoodEntries(moodEntries.filter(entry => entry._id !== id));
+      setError(null);
     } catch (error) {
       console.error('Error deleting mood entry:', error);
+      setError('Failed to delete mood entry.');
     }
   };
 
@@ -101,8 +116,14 @@ const MoodEntryList = () => {
         {moodEntries.length > 0 ? (
           moodEntries.map((entry) => (
             <ListItem key={entry._id}>
-              <ListItemText primary={`Mood: ${entry.category}`} secondary={`Mood Rating: ${entry.moodRating}`} />
-              <ListItemText primary={`Notes: ${entry.notes}`} secondary={`Created At: ${entry.createdAt}`} />
+              <ListItemText
+                primary={`Mood: ${entry.category}`}
+                secondary={`Mood Rating: ${entry.moodRating}`}
+              />
+              {/* <ListItemText
+                primary={`Notes: ${entry.notes}`}
+                secondary={`Created At: ${formatDate(entry.createdAt)}`} // Format date
+              /> */}
               <IconButton onClick={() => openEditModal(entry)}>
                 <Edit />
               </IconButton>
@@ -124,32 +145,64 @@ const MoodEntryList = () => {
         aria-labelledby="edit-mood-entry-title"
         aria-describedby="edit-mood-entry-description"
       >
-        <Box sx={{ p: 4, bgcolor: 'background.paper', maxWidth: 600, margin: 'auto', mt: 10 }}>
+        <Box
+          sx={{
+            p: 4,
+            bgcolor: 'background.paper',
+            maxWidth: 600,
+            margin: 'auto',
+            mt: 10
+          }}
+        >
           <Typography id="edit-mood-entry-title" variant="h6" component="h2">
             {editMode ? 'Edit Mood Entry' : 'View Mood Entry'}
           </Typography>
-          <TextField
-            label="Mood Rating"
-            value={editMode ? currentEntry?.moodRating : ''}
-            onChange={(e) => setCurrentEntry({ ...currentEntry, moodRating: e.target.value })}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Notes"
-            value={editMode ? currentEntry?.notes : ''}
-            onChange={(e) => setCurrentEntry({ ...currentEntry, notes: e.target.value })}
-            fullWidth
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpdateMoodEntry}
-            disabled={!editMode}
-          >
-            {editMode ? 'Save Changes' : 'Close'}
-          </Button>
+          {editMode && currentEntry && (
+            <>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Category</InputLabel>
+                <Select
+                  value={currentEntry.category || ''}
+                  onChange={(e) =>
+                    setCurrentEntry({ ...currentEntry, category: e.target.value })
+                  }
+                  required
+                >
+                  <MenuItem value="Stress">Stress</MenuItem>
+                  <MenuItem value="Happiness">Happiness</MenuItem>
+                  <MenuItem value="Sadness">Sadness</MenuItem>
+                  <MenuItem value="Anxiety">Anxiety</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                label="Mood Rating"
+                value={currentEntry.moodRating || ''}
+                onChange={(e) =>
+                  setCurrentEntry({ ...currentEntry, moodRating: e.target.value })
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Notes"
+                value={currentEntry.notes || ''}
+                onChange={(e) =>
+                  setCurrentEntry({ ...currentEntry, notes: e.target.value })
+                }
+                fullWidth
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleUpdateMoodEntry}
+                disabled={!editMode}
+                sx={{ mt: 2 }}
+              >
+                Save Changes
+              </Button>
+            </>
+          )}
         </Box>
       </Modal>
     </Container>

@@ -29,30 +29,32 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/mood-entries/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { moodRating, notes } = req.body;
+        const { moodRating, notes, category } = req.body;
 
         // Validate input
-        if (!moodRating || !notes) {
+        if (!moodRating || !notes || !category) {
             return res.status(400).json({ message: 'Mood rating and notes are required' });
         }
 
         const updatedEntry = await MoodEntry.findByIdAndUpdate(
             id,
-            { moodRating, notes },
+            { moodRating, notes, category },
             { new: true }
         );
 
         if (!updatedEntry) {
             return res.status(404).json({ message: 'Mood entry not found' });
+            console.log(res.status);
+            console.log(res.statusText);
         }
 
         res.json(updatedEntry);
     } catch (error) {
         console.error('Error updating mood entry:', error);
-        res.status(500).json({ message: 'Failed to update mood entry' });
+         res.status(500).json({ message: 'Failed to update mood entry' });
     }
 });
 
@@ -78,6 +80,22 @@ router.get('/mood-entries/recent/:userId', async (req, res) => {
 
 
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deletedEntry = await MoodEntry.findByIdAndDelete(id);
+
+        if (!deletedEntry) {
+            return res.status(404).json({ message: 'Mood entry not found' });
+        }
+
+        res.json({ message: 'Mood entry deleted successfully', deletedEntry });
+    } catch (error) {
+        console.error('Error deleting mood entry:', error);
+        res.status(500).json({ message: 'Failed to delete mood entry' });
+    }
+});
 
 
 

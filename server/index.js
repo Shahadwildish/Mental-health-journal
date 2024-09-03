@@ -17,15 +17,16 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('combined'));
 // Import routes
-// const MoodEntryList  = require('./routes/MoodEntryList_old');
+
 const reflectionsRoute = require('./routes/reflections'); 
 const moodEntriesRouter = require('./routes/moodEntries');
-app.use('/api/mood-entries', moodEntriesRouter);
-app.use('/api/mood-entries/recent', moodEntriesRouter);
+const userRoutes  = require('./routes/users');
 
+app.use('/api/', moodEntriesRouter);
+app.use('/api/mood-entries/', moodEntriesRouter);
+app.use('/api/mood-entries/recent', moodEntriesRouter);
 app.use('/api/reflections', reflectionsRoute); 
 app.use('/api/auth', authRoute);
-const userRoutes  = require('./routes/users');
 app.use('/api/users', userRoutes);
 
 // Connect to MongoDB

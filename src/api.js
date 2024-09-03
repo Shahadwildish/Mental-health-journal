@@ -142,25 +142,31 @@ export const getMoodEntries = async (userId) => {
     return response.json();
   };
   
-  export const updateMoodEntry = async (id, entry) => {
-    const response = await fetch(`http://localhost:5000/api/mood-entries/${id}`, {
+  export const updateMoodEntry = async (_id, entry) => {
+    const response = await fetch(`http://localhost:5000/api/${_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(entry),
+      
     });
+    console.log(_id);
+    console.log(entry);
+    console.log(response);
     if (!response.ok) {
-      throw new Error('Failed to update mood entry');
+       
+        throw new Error(`HTTP error! status: ${response.status}`); // throw new Error('Failed to update mood entry');
     }
     return response.json();
   };
   
   export const deleteMoodEntry = async (id) => {
-    const response = await fetch(`http://localhost:5000/api/mood-entries/${id}`, {
+    const response = await fetch(`http://localhost:5000/api/${id}`, {
       method: 'DELETE',
     });
     if (!response.ok) {
+        console.log(response)
       throw new Error('Failed to delete mood entry');
     }
   };

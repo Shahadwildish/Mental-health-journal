@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const MoodEntrySchema = new mongoose.Schema({
-  userId: {
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  }, userId: {
     type: Number,
     required: true
   },
