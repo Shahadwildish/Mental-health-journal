@@ -3,6 +3,7 @@ import {  TextField,  Button,  Typography,  Container,  List,  ListItem,  ListIt
 import { Edit, Delete } from '@mui/icons-material';
 import {  getMoodEntries,  createMoodEntry,  updateMoodEntry,  deleteMoodEntry} from '../api'; 
 import { useAuth } from '../contexts/AuthContext';
+import '../App.css';
 
 const MoodEntryList = () => {
   const [moodEntries, setMoodEntries] = useState([]);
@@ -73,7 +74,7 @@ const MoodEntryList = () => {
       setError(null);
     } catch (error) {
       console.error('Error updating mood entry:', error);
-      // setError('Failed to update mood entry.');
+      setError('Failed to update mood entry.');
     }
   };
 
@@ -120,10 +121,10 @@ const MoodEntryList = () => {
                 primary={`Mood: ${entry.category}`}
                 secondary={`Mood Rating: ${entry.moodRating}`}
               />
-              {/* <ListItemText
+              <ListItemText
                 primary={`Notes: ${entry.notes}`}
                 secondary={`Created At: ${formatDate(entry.createdAt)}`} // Format date
-              /> */}
+              />
               <IconButton onClick={() => openEditModal(entry)}>
                 <Edit />
               </IconButton>

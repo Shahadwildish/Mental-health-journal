@@ -12,6 +12,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Homepage from './components/Homepage';
 import Analytics from './components/Analytics';
+import ResourcesPage from './components/ResourcesPage';
+
 
 const App = () => {
   return (
@@ -29,6 +31,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Homepage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
         </Routes>
       </Router>
     </AuthProvider>

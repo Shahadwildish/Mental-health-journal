@@ -43,7 +43,7 @@ const Reflections = () => {
 
   const handleUpdateReflection = async () => {
     try {
-      const updatedRef = await updateReflection(currentReflection._id, { text: currentReflection.text });
+      const updatedRef = await updateReflection(currentReflection._id, { reflectionText: currentReflection.reflectionText });
       setReflections(reflections.map(ref => ref._id === updatedRef._id ? updatedRef : ref));
       setEditMode(false);
       setModalOpen(false);
@@ -120,7 +120,7 @@ const Reflections = () => {
             multiline
             rows={4}
             value={editMode ? currentReflection?.reflectionText : ''}
-            onChange={(e) => setCurrentReflection({ ...currentReflection, text: e.target.value })}
+            onChange={(e) => setCurrentReflection({ ...currentReflection, reflectionText: e.target.value })}
             fullWidth
             margin="normal"
           />

@@ -42,13 +42,15 @@ setRecentEntry(mostRecentEntry);
       fetchRecentMoodEntry();
     }
   }, [user]);
-
+console.log(recentEntry);
 
   console.log(user);
   const handleLogMood = () => {
     navigate('/create-mood-entry'); // Use navigate inside the function
   };
-
+  const handleExploreResources = () => {
+    navigate('/resources');
+  };
   const handleViewAnalytics = () => {
     navigate('/analytics'); // Use navigate inside the function
   };
@@ -106,7 +108,7 @@ setRecentEntry(mostRecentEntry);
             <Grid item xs={12} sm={4}>
               <Paper elevation={10} sx={{ p: 4, textAlign: 'center' }}>
                 <Typography variant="h6">Explore Resources</Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+                <Button variant="contained" color="primary" onClick={handleExploreResources}sx={{ mt: 2 }}>
                   Explore Resources
                 </Button>
               </Paper>

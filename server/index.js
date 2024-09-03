@@ -24,6 +24,8 @@ const userRoutes  = require('./routes/users');
 
 app.use('/api/', moodEntriesRouter);
 app.use('/api/mood-entries/', moodEntriesRouter);
+app.use('/api/mood-entries', moodEntriesRouter);
+app.use('/api/mood-entries/recent/', moodEntriesRouter);
 app.use('/api/mood-entries/recent', moodEntriesRouter);
 app.use('/api/reflections', reflectionsRoute); 
 app.use('/api/auth', authRoute);

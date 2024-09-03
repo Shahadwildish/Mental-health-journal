@@ -59,7 +59,7 @@ router.put('/:id', async (req, res) => {
 });
 
 
-router.get('/mood-entries/recent/:userId', async (req, res) => {
+router.get('/mood-entries/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
 
