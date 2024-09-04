@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(morgan('combined'));
+app.use(morgan('combined')); // helps with debugging backend
 // Import routes
 
 const reflectionsRoute = require('./routes/reflections'); 
